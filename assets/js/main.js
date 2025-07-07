@@ -17,38 +17,42 @@ async function searchSongs() {
 
     results.innerHTML = "";
 
-    for (let song of songs.slice(0, 10)) {
+    for (let song of songs.slice(0, 8)) {
       const songUrl = song.url;
       const songId = songUrl.split("/").pop();
 
-      // Fetch full song data to get stream
-      const detailsRes = await fetch(`https://saavn.dev/api/songs/${songId}`);
-      const detailsData = await detailsRes.json();
-      const track = detailsData.data[0];
+      try {
+        const detailsRes = await fetch(`https://saavn.dev/api/songs/${songId}`);
+        const detailsData = await detailsRes.json();
+        const track = detailsData.data?.[0];
 
-      const title = track.name;
-      const artist = track.primaryArtists;
-      const image = track.image?.[2]?.link || "";
-      const audio = track.downloadUrl?.[2]?.link || track.downloadUrl?.[1]?.link || "";
+        if (!track || !track.downloadUrl?.[2]) continue;
 
-      if (!audio) continue; // skip if no stream
+        const title = track.name;
+        const artist = track.primaryArtists;
+        const image = track.image?.[2]?.link || "";
+        const audio = track.downloadUrl?.[2]?.link || track.downloadUrl?.[1]?.link || "";
 
-      const div = document.createElement("div");
-      div.className = "result-card";
-      div.innerHTML = `
-        <img src="${image}" />
-        <h3>${title}</h3>
-        <p>${artist}</p>
-        <button onclick="playTrack('${audio}', '${title}', '${artist}', '${image}')">▶️ Play</button>
-        <button onclick="addToPlaylist('${audio}', '${title}', '${artist}', '${image}')">➕ Add</button>
-      `;
-      results.appendChild(div);
+        const div = document.createElement("div");
+        div.className = "result-card";
+        div.innerHTML = `
+          <img src="${image}" />
+          <h3>${title}</h3>
+          <p>${artist}</p>
+          <button onclick="playTrack('${audio}', \`${title}\`, \`${artist}\`, '${image}')">▶️ Play</button>
+          <button onclick="addToPlaylist('${audio}', \`${title}\`, \`${artist}\`, '${image}')">➕ Add</button>
+        `;
+        results.appendChild(div);
+      } catch (err) {
+        console.warn("⚠️ Failed to fetch song details for:", song.name);
+        continue;
+      }
     }
 
     saveToHistory(query);
   } catch (error) {
-    console.error(error);
-    results.innerHTML = "<p>❌ Something went wrong while searching.</p>";
+    console.error("❌ Search error:", error);
+    results.innerHTML = "<p>❌ Failed to search. Try again later.</p>";
   }
 }
 
