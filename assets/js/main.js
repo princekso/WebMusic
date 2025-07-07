@@ -29,13 +29,10 @@ async function searchSongs() {
   saveToHistory(query);
 }
 
-// ▶️ Play selected track (resolve stream)
+// ▶️ Stream and play from search
 async function playTrack(track_id, title, artist, image) {
   try {
-    const res = await fetch(`https://api.audius.co/v1/tracks/${track_id}/stream`);
-    const data = await res.json();
-    const stream = data.data;
-
+    const stream = `https://cdn.audius.co/v1/stream/${track_id}?app_name=ChintuMusic`;
     localStorage.setItem("audio_url", stream);
     localStorage.setItem("title", title);
     localStorage.setItem("artist", artist);
@@ -55,7 +52,7 @@ function addToPlaylist(track_id, title, artist, image) {
   alert("🎶 Added to playlist!");
 }
 
-// 📖 Save search history
+// 🧠 Save search history
 function saveToHistory(query) {
   let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
   history.unshift(query);
