@@ -6,7 +6,7 @@ async function searchSongs() {
   results.innerHTML = "<p>🔍 Searching...</p>";
 
   try {
-    const res = await fetch(`https://saavn.me/search/songs?query=${encodeURIComponent(query)}`);
+    const res = await fetch(`https://saavn.dev/api/search/songs?query=${encodeURIComponent(query)}`);
     const data = await res.json();
     const songs = data.data.results;
 
@@ -19,12 +19,11 @@ async function searchSongs() {
 
     for (let song of songs.slice(0, 8)) {
       const id = song.id;
-
-      const detRes = await fetch(`https://saavn.me/songs?id=${id}`);
+      const detRes = await fetch(`https://saavn.dev/api/songs?id=${id}`);
       const detData = await detRes.json();
-      const track = detData.data[0];
+      const track = detData.data;
 
-      const audio = track.downloadUrl.find(x => x.quality === "320kbps")?.link || "";
+      const audio = track.downloadUrl?.high || "";
       const title = track.name || "Unknown Title";
       const artist = track.primaryArtists || "Unknown Artist";
       const image = track.image?.[2]?.link || "";
