@@ -11,10 +11,9 @@ async function searchSongs() {
 
     console.log("🔎 API Raw Response:", data);
 
-    // ⛳ Try multiple structure possibilities
-    const songs = data.data?.results || data.data || [];
+    const songs = data.data?.songs?.results || [];
 
-    if (!Array.isArray(songs) || songs.length === 0) {
+    if (!songs.length) {
       results.innerHTML = "<p>❌ No songs found.</p>";
       return;
     }
@@ -22,20 +21,12 @@ async function searchSongs() {
     results.innerHTML = "";
 
     for (let song of songs.slice(0, 10)) {
-      const title = song.title || song.name || "Unknown";
-      const artist = song.primaryArtists || song.artist || "Unknown Artist";
-      const image = song.image || song.imageUrl || "";
-      let audio = "";
+      const title = song.title || "Unknown";
+      const artist = song.primaryArtists || song.singers || "Unknown Artist";
+      const image = song.image?.[2]?.url || song.image?.[0]?.url || "";
+      const url = song.url || "";
 
-      if (Array.isArray(song.downloadUrl)) {
-        const high = song.downloadUrl.find(x => x.quality === "320kbps");
-        const low = song.downloadUrl.find(x => x.quality === "96kbps");
-        audio = high?.link || low?.link || "";
-      } else if (typeof song.downloadUrl === "string") {
-        audio = song.downloadUrl;
-      }
-
-      if (!audio) continue;
+      if (!url) continue;
 
       const div = document.createElement("div");
       div.className = "result-card";
@@ -43,7 +34,7 @@ async function searchSongs() {
         <img src="${image}" />
         <h3>${title}</h3>
         <p>${artist}</p>
-        <button onclick="playTrack('${audio}', \`${title}\`, \`${artist}\`, '${image}')">▶️ Play</button>
+        <button onclick="playTrack('${url}', \`${title}\`, \`${artist}\`, '${image}')">▶️ Play</button>
       `;
       results.appendChild(div);
     }
