@@ -56,6 +56,7 @@ async function searchSongs() {
 }
 
 function playTrack(audio_url, title, artist, image) {
+  console.log("▶️ Playing:", audio_url);
   localStorage.setItem("audio_url", audio_url);
   localStorage.setItem("title", title);
   localStorage.setItem("artist", artist);
