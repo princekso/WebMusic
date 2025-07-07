@@ -104,3 +104,11 @@ footer {
   color: #aaa;
   font-size: 0.9rem;
 }
+.player-art {
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin: 20px auto;
+  display: block;
+}
