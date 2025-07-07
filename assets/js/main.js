@@ -8,21 +8,20 @@ async function searchSongs() {
   try {
     const res = await fetch(`https://backendapi-xgqd.onrender.com/api/search?query=${encodeURIComponent(query)}`);
     const data = await res.json();
-    const songs = data.data;
-
-    if (!songs || !songs.length) {
-      results.innerHTML = "<p>❌ No results found.</p>";
+    
+    if (!data.data || !Array.isArray(data.data) || data.data.length === 0) {
+      results.innerHTML = "<p>❌ No songs found.</p>";
       return;
     }
 
     results.innerHTML = "";
 
-    for (let song of songs.slice(0, 10)) {
-      const id = song.id;
+    for (let song of data.data.slice(0, 10)) {
       const title = song.title || "Unknown";
-      const artist = song.primaryArtists || "Unknown";
+      const artist = song.primaryArtists || "Unknown Artist";
       const image = song.image || "";
-      const audio = song.downloadUrl || "";
+      const audioObj = Array.isArray(song.downloadUrl) ? song.downloadUrl.find(x => x.quality === "320kbps" || "96kbps") : null;
+      const audio = audioObj?.link || "";
 
       if (!audio) continue;
 
@@ -37,7 +36,7 @@ async function searchSongs() {
       results.appendChild(div);
     }
   } catch (err) {
-    console.error("❌ Search Error:", err);
+    console.error("❌ Error:", err);
     results.innerHTML = "<p>❌ Failed to fetch songs.</p>";
   }
 }
@@ -47,8 +46,6 @@ function playTrack(audio, title, artist, image) {
     alert("❌ No audio URL found!");
     return;
   }
-
-  console.log("▶️ Playing:", title);
 
   localStorage.setItem("audio_url", audio);
   localStorage.setItem("title", title);
