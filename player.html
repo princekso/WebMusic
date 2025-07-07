@@ -3,18 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Now Playing</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <title>🎧 Now Playing - Chintu Music</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
 </head>
-<body class="player-body">
+<body>
   <div class="player-container">
-    <img id="albumArt" src="" />
-    <h2 id="songTitle"></h2>
-    <p id="artistName"></p>
-    <audio id="audioPlayer" controls autoplay></audio>
-    <br>
-    <a href="index.html">🔙 Back to Search</a>
+    <h1>🎶 Now Playing</h1>
+    <img id="songImage" src="" alt="Album Art" class="player-art"/>
+    <h2 id="songTitle">Loading...</h2>
+    <p id="songArtist"></p>
+    <audio id="player" controls autoplay></audio>
+
+    <div style="margin-top: 20px;">
+      <a href="index.html">🔙 Back to Home</a>
+    </div>
   </div>
-  <script src="assets/js/player.js"></script>
+
+  <script>
+    window.onload = function () {
+      const audio = document.getElementById("player");
+      const title = localStorage.getItem("title");
+      const artist = localStorage.getItem("artist");
+      const image = localStorage.getItem("image");
+      const stream = localStorage.getItem("audio_url");
+
+      document.getElementById("songTitle").innerText = title || "Unknown Title";
+      document.getElementById("songArtist").innerText = artist || "Unknown Artist";
+      document.getElementById("songImage").src = image || "";
+      audio.src = stream || "";
+    };
+  </script>
 </body>
 </html>
