@@ -48,13 +48,30 @@ function getTrack(id, title, artist, image) {
   fetch(`https://backendapi-xgqd.onrender.com/api/song/${id}`)
     .then(res => res.json())
     .then(data => {
-      console.log("🎧 Track Data:", data);
+      console.log("🎧 Full Track Data:", data);
 
-      const audio = data.url?.find(x => x.quality === "320kbps")?.link
-                 || data.url?.find(x => x.link.includes(".mp4"))?.link
-                 || "";
+      let audio = "";
 
-      if (!audio) return alert("❌ No audio URL found!");
+      if (Array.isArray(data.url)) {
+        // Prefer 320kbps if available
+        const highQuality = data.url.find(x => x.quality === "320kbps");
+        if (highQuality) {
+          audio = highQuality.link;
+        } else {
+          // Fallback to any .mp4 or last working link
+          const fallback = data.url.find(x => x.link && x.link.endsWith(".mp4"));
+          if (fallback) {
+            audio = fallback.link;
+          } else {
+            audio = data.url[0]?.link || "";
+          }
+        }
+      }
+
+      if (!audio || audio === "undefined") {
+        alert("❌ No valid audio link found!");
+        return;
+      }
 
       localStorage.setItem("audio_url", audio);
       localStorage.setItem("title", title);
@@ -66,20 +83,4 @@ function getTrack(id, title, artist, image) {
       console.error("❌ Track Fetch Error:", err);
       alert("❌ Could not load track");
     });
-}
-
-// 🎵 Load Player on player.html
-function loadPlayer() {
-  const audio = localStorage.getItem("audio_url");
-  const title = localStorage.getItem("title");
-  const artist = localStorage.getItem("artist");
-  const image = localStorage.getItem("image");
-
-  if (!audio) return alert("❌ No audio found");
-
-  document.getElementById("cover").src = image;
-  document.getElementById("title").innerText = title;
-  document.getElementById("artist").innerText = artist;
-  document.getElementById("audio").src = audio;
-  document.getElementById("audio").play();
 }
