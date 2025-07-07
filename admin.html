@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body class="landing">
+  <h1>🛠️ Admin Dashboard</h1>
+
+  <div id="authBox">
+    <input type="password" id="adminPass" placeholder="Enter admin password..." />
+    <button onclick="verifyPass()">Login</button>
+  </div>
+
+  <div id="adminPanel" style="display:none;">
+    <p><strong>Total Playlist Songs:</strong> <span id="playlistCount"></span></p>
+    <p><strong>Recent Searches:</strong></p>
+    <ul id="searchHistory"></ul>
+    <button onclick="clearLogs()">🧹 Clear Search History</button>
+    <button onclick="clearPlaylist()">🗑️ Clear Playlist</button>
+    <br><br>
+    <a href="index.html">🔙 Back to Home</a>
+  </div>
+
+  <script src="assets/js/admin.js"></script>
+</body>
+</html>
