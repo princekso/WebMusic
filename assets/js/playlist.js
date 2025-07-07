@@ -14,29 +14,21 @@ window.onload = function () {
       <img src="${song.image}" />
       <h3>${song.title}</h3>
       <p>${song.artist}</p>
-      <button onclick="playFromPlaylist('${song.track_id}', '${song.title}', '${song.artist}', '${song.image}')">▶️ Play</button>
+      <button onclick="playFromPlaylist('${song.audio_url}', '${song.title}', '${song.artist}', '${song.image}')">▶️ Play</button>
       <button onclick="removeTrack(${index})">❌ Remove</button>
     `;
     container.appendChild(div);
   });
 };
 
-// ▶️ Play from playlist (fixed stream)
-async function playFromPlaylist(track_id, title, artist, image) {
-  try {
-    const stream = `https://cdn.audius.co/v1/stream/${track_id}?app_name=ChintuMusic`;
-    localStorage.setItem("audio_url", stream);
-    localStorage.setItem("title", title);
-    localStorage.setItem("artist", artist);
-    localStorage.setItem("image", image);
-    window.location.href = "player.html";
-  } catch (err) {
-    alert("❌ Could not stream this track.");
-    console.error(err);
-  }
+function playFromPlaylist(audio_url, title, artist, image) {
+  localStorage.setItem("audio_url", audio_url);
+  localStorage.setItem("title", title);
+  localStorage.setItem("artist", artist);
+  localStorage.setItem("image", image);
+  window.location.href = "player.html";
 }
 
-// ❌ Remove from playlist
 function removeTrack(index) {
   let playlist = JSON.parse(localStorage.getItem("playlist")) || [];
   playlist.splice(index, 1);
