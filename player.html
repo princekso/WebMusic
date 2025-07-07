@@ -29,32 +29,17 @@
   <audio id="audio" controls autoplay></audio>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const songId = urlParams.get("id");
+  const audio = localStorage.getItem("audio_url");
+  const title = localStorage.getItem("title");
+  const artist = localStorage.getItem("artist");
+  const image = localStorage.getItem("image");
 
-    async function loadSong() {
-      try {
-        const res = await fetch(`https://saavn.dev/api/songs?id=${songId}`);
-        const data = await res.json();
-        if (!data.data || !data.data.downloadUrl) {
-          document.getElementById("title").innerText = "Failed to load song.";
-          return;
-        }
-
-        document.getElementById("title").innerText = data.data.name;
-        document.getElementById("artist").innerText = data.data.primaryArtists;
-        document.getElementById("thumbnail").src = data.data.image[2].link;
-        document.getElementById("audio").src = data.data.downloadUrl.high;
-      } catch (error) {
-        document.getElementById("title").innerText = "Error loading song.";
-      }
-    }
-
-    if (songId) {
-      loadSong();
-    } else {
-      document.getElementById("title").innerText = "No song selected.";
-    }
-  </script>
-</body>
-</html>
+  if (!audio) {
+    document.getElementById("title").innerText = "❌ No song to play";
+  } else {
+    document.getElementById("audio").src = audio;
+    document.getElementById("title").innerText = title;
+    document.getElementById("artist").innerText = artist;
+    document.getElementById("thumbnail").src = image;
+  }
+</script>
