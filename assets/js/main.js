@@ -19,14 +19,23 @@ async function searchSongs() {
 
     for (let song of songs.slice(0, 8)) {
       const id = song.id;
-      const detRes = await fetch(`https://saavn.dev/api/songs/${id}`);
-      const detData = await detRes.json();
-      const track = detData.data[0];
 
-      const audio = track?.downloadUrl?.find(x => x.quality === "320kbps")?.link || "";
-      const title = track.name;
-      const artist = track.primaryArtists;
-      const image = track.image?.[2]?.link;
+      const details = await fetch(`https://saavn.dev/api/songs/${id}`);
+      const detailsData = await details.json();
+      const track = detailsData.data?.[0];
+
+      if (!track || !track.downloadUrl || track.downloadUrl.length === 0) continue;
+
+      const audioObj = track.downloadUrl.find(x => x.link && x.quality === "320kbps");
+      const audio = audioObj?.link || "";
+
+      console.log("🎵 Audio URL for", track.name, "=", audio);
+
+      const title = track.name || "Unknown Title";
+      const artist = track.primaryArtists || "Unknown Artist";
+      const image = track.image?.[2]?.link || "";
+
+      if (!audio) continue; // skip track if no audio
 
       const card = document.createElement("div");
       card.className = "result-card";
@@ -39,13 +48,17 @@ async function searchSongs() {
       results.appendChild(card);
     }
   } catch (err) {
-    console.error(err);
-    results.innerHTML = "<p>❌ Failed to fetch songs.</p>";
+    console.error("❌ ERROR:", err);
+    results.innerHTML = "<p>❌ Search failed. Try again.</p>";
   }
 }
 
 function playTrack(audio, title, artist, image) {
-  if (!audio) return alert("❌ No audio URL found!");
+  console.log("🧪 playTrack:", audio);
+  if (!audio || audio === "undefined") {
+    alert("❌ No audio URL found!");
+    return;
+  }
 
   localStorage.setItem("audio_url", audio);
   localStorage.setItem("title", title);
