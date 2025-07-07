@@ -70,25 +70,26 @@
   <button class="back-btn" onclick="window.location.href='index.html'">⬅️ Back to Search</button>
 
   <script>
-    const audio = document.getElementById("audio");
-    const title = document.getElementById("title");
-    const artist = document.getElementById("artist");
-    const cover = document.getElementById("cover");
+window.onload = () => {
+  const audio = localStorage.getItem("audio_url");
+  const title = localStorage.getItem("title");
+  const artist = localStorage.getItem("artist");
+  const image = localStorage.getItem("image");
 
-    const url = localStorage.getItem("audio_url");
-    const songTitle = localStorage.getItem("title");
-    const songArtist = localStorage.getItem("artist");
-    const image = localStorage.getItem("image");
+  if (!audio) {
+    alert("❌ No song to play");
+    return;
+  }
 
-    if (url) {
-      audio.src = url;
-      title.innerText = songTitle || "Unknown Title";
-      artist.innerText = songArtist || "Unknown Artist";
-      cover.src = image || "";
-    } else {
-      title.innerText = "❌ No Track Found";
-      artist.innerText = "Try searching again";
-    }
-  </script>
+  document.getElementById("songTitle").innerText = title;
+  document.getElementById("songArtist").innerText = artist;
+  document.getElementById("songImage").src = image;
+
+  const audioPlayer = document.getElementById("audioPlayer");
+  audioPlayer.src = audio;
+  audioPlayer.play();
+};
+</script>
+
 </body>
 </html>
