@@ -17,18 +17,28 @@ async function searchSongs() {
 
     results.innerHTML = "";
 
-    for (let song of songs.slice(0, 8)) {
+    for (let song of songs.slice(0, 10)) {
       const id = song.id;
+
       const detRes = await fetch(`https://saavn.dev/api/songs?id=${id}`);
       const detData = await detRes.json();
       const track = detData.data;
 
-      const audio = track.downloadUrl?.high || "";
+      // ✅ Safe fallback chain for audio quality
+      const audio =
+        track.downloadUrl?.high ||
+        track.downloadUrl?.medium ||
+        track.downloadUrl?.low ||
+        "";
+
       const title = track.name || "Unknown Title";
       const artist = track.primaryArtists || "Unknown Artist";
       const image = track.image?.[2]?.link || "";
 
-      if (!audio) continue;
+      if (!audio || audio === "undefined") {
+        console.warn("⚠️ No valid audio URL for:", title);
+        continue;
+      }
 
       console.log("🎵 Audio URL:", audio);
 
@@ -49,7 +59,6 @@ async function searchSongs() {
 }
 
 function playTrack(audio, title, artist, image) {
-  console.log("▶️ Playing:", audio);
   if (!audio || audio === "undefined") {
     alert("❌ No audio URL found!");
     return;
