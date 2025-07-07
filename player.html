@@ -36,17 +36,16 @@
     img.src = i;
     audio.src = stream;
     audio.load();
-    audio.play().catch(e => console.warn("Autoplay failed:", e));
 
-    console.log("🎧 Audio URL:", stream);
+    // Try autoplay
+    audio.play().catch(e => {
+      console.warn("Autoplay blocked:", e);
+    });
 
-    // 👇 Ye part visible karega URL ko screen pe (copy ke liye)
+    // Show audio link for debug
     const info = document.createElement("p");
     info.style = "font-size:0.8rem; word-break:break-all; text-align:center; margin:10px; color:#ccc";
     info.innerText = "🔗 Audio URL:\n" + stream;
     document.body.appendChild(info);
   };
 </script>
-
-</body>
-</html>
