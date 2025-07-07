@@ -48,28 +48,20 @@ function getTrack(id, title, artist, image) {
   fetch(`https://backendapi-xgqd.onrender.com/api/song/${id}`)
     .then(res => res.json())
     .then(data => {
-      console.log("🎧 Full Track Data:", data);
+      console.log("🎧 Track Data:", data);
 
       let audio = "";
 
+      // 🔍 Pick 320kbps if available
       if (Array.isArray(data.url)) {
-        // Prefer 320kbps if available
-        const highQuality = data.url.find(x => x.quality === "320kbps");
-        if (highQuality) {
-          audio = highQuality.link;
-        } else {
-          // Fallback to any .mp4 or last working link
-          const fallback = data.url.find(x => x.link && x.link.endsWith(".mp4"));
-          if (fallback) {
-            audio = fallback.link;
-          } else {
-            audio = data.url[0]?.link || "";
-          }
-        }
+        const best = data.url.find(x => x.quality === "320kbps");
+        audio = best?.url || data.url[0]?.url || "";
+      } else if (typeof data.url === "string") {
+        audio = data.url;
       }
 
-      if (!audio || audio === "undefined") {
-        alert("❌ No valid audio link found!");
+      if (!audio) {
+        alert("❌ No audio URL found!");
         return;
       }
 
