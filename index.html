@@ -3,76 +3,114 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chintu Music Player</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <title>Chintu Music Player 🎵</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Nunito', sans-serif;
+      background-color: #0f0f0f;
+      color: white;
+    }
+
+    .header {
+      text-align: center;
+      padding: 30px 20px 20px;
+    }
+
+    .header h1 {
+      font-size: 2.2em;
+      margin: 0;
+      color: #f72585;
+    }
+
+    .search-box {
+      text-align: center;
+      margin: 20px;
+    }
+
+    .search-box input {
+      width: 80%;
+      max-width: 500px;
+      padding: 12px 18px;
+      border-radius: 25px;
+      border: none;
+      font-size: 1.1em;
+      outline: none;
+    }
+
+    .results {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin: 30px;
+    }
+
+    .result-card {
+      background-color: #1c1c1c;
+      border-radius: 12px;
+      width: 180px;
+      padding: 12px;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .result-card:hover {
+      transform: scale(1.05);
+      background-color: #2a2a2a;
+    }
+
+    .result-card img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .result-card h3 {
+      font-size: 1em;
+      margin: 10px 0 5px;
+    }
+
+    .result-card p {
+      font-size: 0.9em;
+      color: #ccc;
+      margin: 0 0 10px;
+    }
+
+    .result-card button {
+      background-color: #f72585;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 0.9em;
+      color: #777;
+      padding: 20px;
+      margin-top: 50px;
+    }
+  </style>
 </head>
 <body>
-  <div class="landing">
+  <div class="header">
     <h1>🎶 Chintu Music Player</h1>
-    <p>Stream unlimited high-quality music powered by Audius</p>
-
-    <!-- 🔍 Search Box -->
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Search any song..." />
-      <button onclick="searchSongs()">Search</button>
+      <input type="text" id="searchInput" placeholder="Search your favorite song..." onkeydown="if(event.key === 'Enter') searchSongs()" />
     </div>
-
-    <!-- 🌟 Feature Section -->
-    <div class="features">
-      <h2>✨ Why Chintu Music?</h2>
-      <ul>
-        <li>🎧 High Quality Audio (320kbps)</li>
-        <li>📡 Unlimited Streaming from Audius</li>
-        <li>🚫 No Ads, No Signup Needed</li>
-        <li>🎵 Add Songs to Playlist</li>
-        <li>🔐 Admin Dashboard Access</li>
-      </ul>
-    </div>
-
-    <!-- 🎵 Sample Featured Songs -->
-    <div class="featured-songs">
-      <h2>🔥 Trending Now</h2>
-      <div class="results">
-        <div class="result-card">
-          <img src="https://i1.sndcdn.com/artworks-x3AjJeSh7Wl7-0-t500x500.jpg" />
-          <h3>Lose Yourself</h3>
-          <p>Eminem</p>
-          <button onclick="playDirect('https://audius-discovery-2.audius.co/v1/tracks/LoseYourself.mp3', 'Lose Yourself', 'Eminem', 'https://i1.sndcdn.com/artworks-x3AjJeSh7Wl7-0-t500x500.jpg')">Play Now</button>
-        </div>
-        <div class="result-card">
-          <img src="https://i1.sndcdn.com/artworks-000654998745-bchfry-t500x500.jpg" />
-          <h3>Stay</h3>
-          <p>The Kid LAROI, Justin Bieber</p>
-          <button onclick="playDirect('https://audius-discovery-2.audius.co/v1/tracks/Stay.mp3', 'Stay', 'Justin Bieber', 'https://i1.sndcdn.com/artworks-000654998745-bchfry-t500x500.jpg')">Play Now</button>
-        </div>
-        <div class="result-card">
-          <img src="https://i1.sndcdn.com/artworks-000734834361-xh41e9-t500x500.jpg" />
-          <h3>Kesariya</h3>
-          <p>Arijit Singh</p>
-          <button onclick="playDirect('https://audius-discovery-2.audius.co/v1/tracks/Kesariya.mp3', 'Kesariya', 'Arijit Singh', 'https://i1.sndcdn.com/artworks-000734834361-xh41e9-t500x500.jpg')">Play Now</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 🔎 Search Results -->
-    <h2>🔍 Search Results</h2>
-    <div class="results" id="searchResults"></div>
-
-    <footer>
-      <p>🎧 Powered by Audius API • Created by <a href="https://t.me/Prince_x_010" target="_blank">@Prince_x_010</a></p>
-      <p>📺 <a href="https://youtube.com/@clrmdh_98" target="_blank">YouTube: @clrmdh_98</a></p>
-    </footer>
   </div>
 
-  <script src="assets/js/main.js"></script>
-  <script>
-    function playDirect(url, title, artist, image) {
-      localStorage.setItem("audio_url", url);
-      localStorage.setItem("title", title);
-      localStorage.setItem("artist", artist);
-      localStorage.setItem("image", image);
-      window.location.href = "player.html";
-    }
-  </script>
+  <div id="searchResults" class="results">
+    <!-- Songs appear here -->
+  </div>
+
+  <div class="footer">
+    © 2025 Chintu Music | Powered by JioSaavn
+  </div>
+
+  <script src="main.js"></script>
 </body>
 </html>
