@@ -6,7 +6,12 @@ async function searchSongs() {
   results.innerHTML = "<p>🔍 Searching...</p>";
 
   try {
-    const res = await fetch(`https://frozenmusic.vercel.app/api/v1/search?query=${encodeURIComponent(query)}&api_key=fzm_2b4ecd31_3z5vufoc`);
+    const res = await fetch(`https://frozenmusic.vercel.app/api/v1/search?query=${encodeURIComponent(query)}`, {
+      headers: {
+        "X-API-Key": "fzm_2b4ecd31_jz2efhnt"
+      }
+    });
+
     const data = await res.json();
     const songs = data.data;
 
