@@ -18,8 +18,7 @@ async function searchSongs() {
     results.innerHTML = "";
 
     for (let song of songs.slice(0, 8)) {
-      const songUrl = song.url;
-      const songId = songUrl.split("/").pop();
+      const songId = song.id;
 
       try {
         const detailsRes = await fetch(`https://saavn.dev/api/songs/${songId}`);
