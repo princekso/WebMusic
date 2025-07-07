@@ -15,7 +15,7 @@ async function searchSongs() {
     const songs = data?.data?.songs?.results;
 
     if (!songs || !songs.length) {
-      results.innerHTML = "<p>❌ No results found.</p>";
+      results.innerHTML = "<p>❌ No result found.</p>";
       return;
     }
 
@@ -50,20 +50,11 @@ function getTrack(id, title, artist, image) {
     .then(data => {
       console.log("🎧 Track Data:", data);
 
-      let audio = "";
+      const downloadOptions = data?.data?.[0]?.downloadUrl;
+      const audio = downloadOptions?.find(d => d.quality === "320kbps")?.url
+                 || downloadOptions?.[0]?.url;
 
-      // 🔍 Pick 320kbps if available
-      if (Array.isArray(data.url)) {
-        const best = data.url.find(x => x.quality === "320kbps");
-        audio = best?.url || data.url[0]?.url || "";
-      } else if (typeof data.url === "string") {
-        audio = data.url;
-      }
-
-      if (!audio) {
-        alert("❌ No audio URL found!");
-        return;
-      }
+      if (!audio) return alert("❌ No audio URL found");
 
       localStorage.setItem("audio_url", audio);
       localStorage.setItem("title", title);
