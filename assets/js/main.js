@@ -6,74 +6,50 @@ async function searchSongs() {
   results.innerHTML = "<p>🔍 Searching...</p>";
 
   try {
-    const searchRes = await fetch(`https://saavn.dev/api/search/songs?query=${encodeURIComponent(query)}`);
-    const searchData = await searchRes.json();
-    const songs = searchData.data.results || [];
+    const res = await fetch(`https://saavn.dev/api/search/songs?query=${encodeURIComponent(query)}`);
+    const data = await res.json();
+    const songs = data.data.results;
 
     if (!songs.length) {
-      results.innerHTML = "<p>No songs found.</p>";
+      results.innerHTML = "<p>No results found.</p>";
       return;
     }
 
     results.innerHTML = "";
 
     for (let song of songs.slice(0, 8)) {
-      const songId = song.id;
+      const id = song.id;
+      const detRes = await fetch(`https://saavn.dev/api/songs/${id}`);
+      const detData = await detRes.json();
+      const track = detData.data[0];
 
-      try {
-        const detailsRes = await fetch(`https://saavn.dev/api/songs/${songId}`);
-        const detailsData = await detailsRes.json();
-        const track = detailsData.data?.[0];
+      const audio = track?.downloadUrl?.find(x => x.quality === "320kbps")?.link || "";
+      const title = track.name;
+      const artist = track.primaryArtists;
+      const image = track.image?.[2]?.link;
 
-        if (!track || !track.downloadUrl?.[2]) continue;
-
-        const title = track.name;
-        const artist = track.primaryArtists;
-        const image = track.image?.[2]?.link || "";
-        const audio = track.downloadUrl?.[2]?.link || track.downloadUrl?.[1]?.link || "";
-
-        const div = document.createElement("div");
-        div.className = "result-card";
-        div.innerHTML = `
-          <img src="${image}" />
-          <h3>${title}</h3>
-          <p>${artist}</p>
-          <button onclick="playTrack('${audio}', \`${title}\`, \`${artist}\`, '${image}')">▶️ Play</button>
-          <button onclick="addToPlaylist('${audio}', \`${title}\`, \`${artist}\`, '${image}')">➕ Add</button>
-        `;
-        results.appendChild(div);
-      } catch (err) {
-        console.warn("⚠️ Failed to fetch song details for:", song.name);
-        continue;
-      }
+      const card = document.createElement("div");
+      card.className = "result-card";
+      card.innerHTML = `
+        <img src="${image}" />
+        <h3>${title}</h3>
+        <p>${artist}</p>
+        <button onclick="playTrack('${audio}', \`${title}\`, \`${artist}\`, '${image}')">▶️ Play</button>
+      `;
+      results.appendChild(card);
     }
-
-    saveToHistory(query);
-  } catch (error) {
-    console.error("❌ Search error:", error);
-    results.innerHTML = "<p>❌ Failed to search. Try again later.</p>";
+  } catch (err) {
+    console.error(err);
+    results.innerHTML = "<p>❌ Failed to fetch songs.</p>";
   }
 }
 
-function playTrack(audio_url, title, artist, image) {
-  console.log("▶️ Playing:", audio_url);
-  localStorage.setItem("audio_url", audio_url);
+function playTrack(audio, title, artist, image) {
+  if (!audio) return alert("❌ No audio URL found!");
+
+  localStorage.setItem("audio_url", audio);
   localStorage.setItem("title", title);
   localStorage.setItem("artist", artist);
   localStorage.setItem("image", image);
   window.location.href = "player.html";
-}
-
-function addToPlaylist(audio_url, title, artist, image) {
-  let playlist = JSON.parse(localStorage.getItem("playlist")) || [];
-  playlist.push({ audio_url, title, artist, image });
-  localStorage.setItem("playlist", JSON.stringify(playlist));
-  alert("🎶 Added to playlist!");
-}
-
-function saveToHistory(query) {
-  let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
-  history.unshift(query);
-  if (history.length > 20) history = history.slice(0, 20);
-  localStorage.setItem("searchHistory", JSON.stringify(history));
 }
