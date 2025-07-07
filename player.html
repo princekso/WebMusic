@@ -3,43 +3,92 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chintu Music Player</title>
+  <title>Now Playing 🎧</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" />
   <style>
     body {
-      background: #111;
-      color: #fff;
-      font-family: sans-serif;
+      margin: 0;
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(120deg, #0f0f0f, #1a1a1a);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
       text-align: center;
-      padding: 20px;
     }
+
     img {
-      width: 200px;
+      width: 220px;
+      height: 220px;
+      object-fit: cover;
       border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
     }
+
+    h2 {
+      margin: 10px 0 5px;
+      font-size: 1.5em;
+      color: #f72585;
+    }
+
+    p {
+      margin: 0 0 20px;
+      font-size: 1em;
+      color: #ccc;
+    }
+
     audio {
-      margin-top: 20px;
-      width: 80%;
+      width: 90%;
+      max-width: 500px;
+      margin-top: 10px;
+      outline: none;
+    }
+
+    .back-btn {
+      margin-top: 30px;
+      background: #f72585;
+      border: none;
+      padding: 10px 20px;
+      color: white;
+      border-radius: 20px;
+      font-size: 1em;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
+  <img id="cover" src="" alt="Cover" />
   <h2 id="title">Loading...</h2>
-  <img id="thumbnail" src="" alt="Song Thumbnail" />
-  <p id="artist"></p>
-  <audio id="audio" controls autoplay></audio>
+  <p id="artist">Please wait</p>
+  <audio id="audio" controls autoplay>
+    Your browser does not support the audio element.
+  </audio>
 
-<script>
-  const audio = localStorage.getItem("audio_url");
-  const title = localStorage.getItem("title");
-  const artist = localStorage.getItem("artist");
-  const image = localStorage.getItem("image");
+  <button class="back-btn" onclick="window.location.href='index.html'">⬅️ Back to Search</button>
 
-  if (!audio) {
-    document.getElementById("title").innerText = "❌ No song to play";
-  } else {
-    document.getElementById("audio").src = audio;
-    document.getElementById("title").innerText = title;
-    document.getElementById("artist").innerText = artist;
-    document.getElementById("thumbnail").src = image;
-  }
-</script>
+  <script>
+    const audio = document.getElementById("audio");
+    const title = document.getElementById("title");
+    const artist = document.getElementById("artist");
+    const cover = document.getElementById("cover");
+
+    const url = localStorage.getItem("audio_url");
+    const songTitle = localStorage.getItem("title");
+    const songArtist = localStorage.getItem("artist");
+    const image = localStorage.getItem("image");
+
+    if (url) {
+      audio.src = url;
+      title.innerText = songTitle || "Unknown Title";
+      artist.innerText = songArtist || "Unknown Artist";
+      cover.src = image || "";
+    } else {
+      title.innerText = "❌ No Track Found";
+      artist.innerText = "Try searching again";
+    }
+  </script>
+</body>
+</html>
