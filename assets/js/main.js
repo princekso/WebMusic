@@ -6,9 +6,9 @@ async function searchSongs() {
   results.innerHTML = "<p>🔍 Searching...</p>";
 
   try {
-    const res = await fetch(`https://saavn.dev/api/search/songs?query=${encodeURIComponent(query)}`);
+    const res = await fetch(`https://frozenmusic.vercel.app/api/v1/search?query=${encodeURIComponent(query)}&api_key=fzm_2b4ecd31_3z5vufoc`);
     const data = await res.json();
-    const songs = data.data.results;
+    const songs = data.data;
 
     if (!songs || !songs.length) {
       results.innerHTML = "<p>❌ No results found.</p>";
@@ -19,28 +19,12 @@ async function searchSongs() {
 
     for (let song of songs.slice(0, 10)) {
       const id = song.id;
+      const title = song.title || "Unknown";
+      const artist = song.primaryArtists || "Unknown";
+      const image = song.image || "";
+      const audio = song.downloadUrl || "";
 
-      const detRes = await fetch(`https://saavn.dev/api/songs?id=${id}`);
-      const detData = await detRes.json();
-      const track = detData.data;
-
-      // ✅ Safe fallback chain for audio quality
-      const audio =
-        track.downloadUrl?.high ||
-        track.downloadUrl?.medium ||
-        track.downloadUrl?.low ||
-        "";
-
-      const title = track.name || "Unknown Title";
-      const artist = track.primaryArtists || "Unknown Artist";
-      const image = track.image?.[2]?.link || "";
-
-      if (!audio || audio === "undefined") {
-        console.warn("⚠️ No valid audio URL for:", title);
-        continue;
-      }
-
-      console.log("🎵 Audio URL:", audio);
+      if (!audio) continue;
 
       const div = document.createElement("div");
       div.className = "result-card";
@@ -53,7 +37,7 @@ async function searchSongs() {
       results.appendChild(div);
     }
   } catch (err) {
-    console.error("❌ Search Error:", err);
+    console.error("❌ Error:", err);
     results.innerHTML = "<p>❌ Failed to fetch songs.</p>";
   }
 }
