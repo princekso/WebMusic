@@ -20,32 +20,24 @@
   </div>
 
   <script>
-  window.onload = function () {
-    const audio = document.getElementById("player");
-    const title = document.getElementById("songTitle");
-    const artist = document.getElementById("songArtist");
-    const img = document.getElementById("songImage");
+  const audio = document.getElementById("player");
+  const title = document.getElementById("songTitle");
+  const artist = document.getElementById("songArtist");
+  const image = document.getElementById("songImage");
 
-    const stream = localStorage.getItem("audio_url") || "";
-    const t = localStorage.getItem("title") || "Unknown Title";
-    const a = localStorage.getItem("artist") || "Unknown Artist";
-    const i = localStorage.getItem("image") || "";
+  const audio_url = localStorage.getItem("audio_url");
+  const songTitle = localStorage.getItem("title");
+  const songArtist = localStorage.getItem("artist");
+  const songImage = localStorage.getItem("image");
 
-    title.innerText = t;
-    artist.innerText = a;
-    img.src = i;
-    audio.src = stream;
+  if (!audio_url) {
+    document.body.innerHTML = "<h3>❌ Track failed to load</h3>";
+  } else {
+    audio.src = audio_url;
+    title.textContent = songTitle;
+    artist.textContent = songArtist;
+    image.src = songImage;
     audio.load();
-
-    // Try autoplay
-    audio.play().catch(e => {
-      console.warn("Autoplay blocked:", e);
-    });
-
-    // Show audio link for debug
-    const info = document.createElement("p");
-    info.style = "font-size:0.8rem; word-break:break-all; text-align:center; margin:10px; color:#ccc";
-    info.innerText = "🔗 Audio URL:\n" + stream;
-    document.body.appendChild(info);
-  };
+    audio.play().catch(err => console.warn("Autoplay blocked:", err));
+  }
 </script>
