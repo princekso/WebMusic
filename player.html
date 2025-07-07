@@ -3,41 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🎧 Now Playing - Chintu Music</title>
-  <link rel="stylesheet" href="assets/css/style.css"/>
+  <title>Chintu Music Player</title>
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    img {
+      width: 200px;
+      border-radius: 12px;
+    }
+    audio {
+      margin-top: 20px;
+      width: 80%;
+    }
+  </style>
 </head>
 <body>
-  <div class="player-container">
-    <h1>🎶 Now Playing</h1>
-    <img id="songImage" src="" alt="Album Art" class="player-art"/>
-    <h2 id="songTitle">Loading...</h2>
-    <p id="songArtist"></p>
-    <audio id="player" controls autoplay></audio>
-
-    <div style="margin-top: 20px;">
-      <a href="index.html">🔙 Back to Home</a>
-    </div>
-  </div>
+  <h2 id="title">Loading...</h2>
+  <img id="thumbnail" src="" alt="Song Thumbnail" />
+  <p id="artist"></p>
+  <audio id="audio" controls autoplay></audio>
 
   <script>
-  const audio = document.getElementById("player");
-  const title = document.getElementById("songTitle");
-  const artist = document.getElementById("songArtist");
-  const image = document.getElementById("songImage");
+    const urlParams = new URLSearchParams(window.location.search);
+    const songId = urlParams.get("id");
 
-  const audio_url = localStorage.getItem("audio_url");
-  const songTitle = localStorage.getItem("title");
-  const songArtist = localStorage.getItem("artist");
-  const songImage = localStorage.getItem("image");
+    async function loadSong() {
+      try {
+        const res = await fetch(`https://saavn.dev/api/songs?id=${songId}`);
+        const data = await res.json();
+        if (!data.data || !data.data.downloadUrl) {
+          document.getElementById("title").innerText = "Failed to load song.";
+          return;
+        }
 
-  if (!audio_url) {
-    document.body.innerHTML = "<h3>❌ Track failed to load</h3>";
-  } else {
-    audio.src = audio_url;
-    title.textContent = songTitle;
-    artist.textContent = songArtist;
-    image.src = songImage;
-    audio.load();
-    audio.play().catch(err => console.warn("Autoplay blocked:", err));
-  }
-</script>
+        document.getElementById("title").innerText = data.data.name;
+        document.getElementById("artist").innerText = data.data.primaryArtists;
+        document.getElementById("thumbnail").src = data.data.image[2].link;
+        document.getElementById("audio").src = data.data.downloadUrl.high;
+      } catch (error) {
+        document.getElementById("title").innerText = "Error loading song.";
+      }
+    }
+
+    if (songId) {
+      loadSong();
+    } else {
+      document.getElementById("title").innerText = "No song selected.";
+    }
+  </script>
+</body>
+</html>
