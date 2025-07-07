@@ -20,18 +20,33 @@
   </div>
 
   <script>
-    window.onload = function () {
-      const audio = document.getElementById("player");
-      const title = localStorage.getItem("title");
-      const artist = localStorage.getItem("artist");
-      const image = localStorage.getItem("image");
-      const stream = localStorage.getItem("audio_url");
+  window.onload = function () {
+    const audio = document.getElementById("player");
+    const title = document.getElementById("songTitle");
+    const artist = document.getElementById("songArtist");
+    const img = document.getElementById("songImage");
 
-      document.getElementById("songTitle").innerText = title || "Unknown Title";
-      document.getElementById("songArtist").innerText = artist || "Unknown Artist";
-      document.getElementById("songImage").src = image || "";
-      audio.src = stream || "";
-    };
-  </script>
+    const stream = localStorage.getItem("audio_url") || "";
+    const t = localStorage.getItem("title") || "Unknown Title";
+    const a = localStorage.getItem("artist") || "Unknown Artist";
+    const i = localStorage.getItem("image") || "";
+
+    title.innerText = t;
+    artist.innerText = a;
+    img.src = i;
+    audio.src = stream;
+    audio.load();
+    audio.play().catch(e => console.warn("Autoplay failed:", e));
+
+    console.log("🎧 Audio URL:", stream);
+
+    // 👇 Ye part visible karega URL ko screen pe (copy ke liye)
+    const info = document.createElement("p");
+    info.style = "font-size:0.8rem; word-break:break-all; text-align:center; margin:10px; color:#ccc";
+    info.innerText = "🔗 Audio URL:\n" + stream;
+    document.body.appendChild(info);
+  };
+</script>
+
 </body>
 </html>
