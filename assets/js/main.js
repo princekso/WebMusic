@@ -2,26 +2,28 @@ async function searchSongs() {
   const query = document.getElementById("searchInput").value;
   if (!query.trim()) return alert("Please enter a search query");
 
-  const res = await fetch(`https://api.audius.co/v1/tracks/search?query=${encodeURIComponent(query)}`);
+  const res = await fetch(`https://saavn.me/search/songs?query=${encodeURIComponent(query)}`);
   const data = await res.json();
 
   const results = document.getElementById("searchResults");
   results.innerHTML = "";
 
-  data.data.forEach(track => {
-    const title = track.title;
-    const artist = track.user.name;
-    const track_id = track.id;
-    const artwork = track.artwork && track.artwork['480x480'];
+  const songs = data.data.results || [];
+
+  songs.forEach(track => {
+    const title = track.name;
+    const artist = track.primaryArtists;
+    const image = track.image[2].link; // Medium quality image
+    const audio = track.downloadUrl[4].link; // 320kbps link (or 2 = 160kbps)
 
     const div = document.createElement("div");
     div.className = "result-card";
     div.innerHTML = `
-      <img src="${artwork}" />
+      <img src="${image}" />
       <h3>${title}</h3>
       <p>${artist}</p>
-      <button onclick="playTrack('${track_id}', '${title}', '${artist}', '${artwork}')">Play</button>
-      <button onclick="addToPlaylist('${track_id}', '${title}', '${artist}', '${artwork}')">➕ Add to Playlist</button>
+      <button onclick="playTrack('${audio}', '${title}', '${artist}', '${image}')">▶️ Play</button>
+      <button onclick="addToPlaylist('${audio}', '${title}', '${artist}', '${image}')">➕ Add</button>
     `;
     results.appendChild(div);
   });
@@ -29,30 +31,21 @@ async function searchSongs() {
   saveToHistory(query);
 }
 
-// ▶️ Stream and play from search
-async function playTrack(track_id, title, artist, image) {
-  try {
-    const stream = `https://cdn.audius.co/v1/stream/${track_id}?app_name=ChintuMusic`;
-    localStorage.setItem("audio_url", stream);
-    localStorage.setItem("title", title);
-    localStorage.setItem("artist", artist);
-    localStorage.setItem("image", image);
-    window.location.href = "player.html";
-  } catch (err) {
-    alert("❌ Unable to stream this track.");
-    console.error(err);
-  }
+function playTrack(audio_url, title, artist, image) {
+  localStorage.setItem("audio_url", audio_url);
+  localStorage.setItem("title", title);
+  localStorage.setItem("artist", artist);
+  localStorage.setItem("image", image);
+  window.location.href = "player.html";
 }
 
-// ➕ Add to playlist
-function addToPlaylist(track_id, title, artist, image) {
+function addToPlaylist(audio_url, title, artist, image) {
   let playlist = JSON.parse(localStorage.getItem("playlist")) || [];
-  playlist.push({ track_id, title, artist, image });
+  playlist.push({ audio_url, title, artist, image });
   localStorage.setItem("playlist", JSON.stringify(playlist));
-  alert("🎶 Added to playlist!");
+  alert("🎵 Added to playlist!");
 }
 
-// 🧠 Save search history
 function saveToHistory(query) {
   let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
   history.unshift(query);
