@@ -21,13 +21,10 @@ window.onload = function () {
   });
 };
 
-// 🟢 Resolve stream from Audius & play
+// ▶️ Play from playlist (fixed stream)
 async function playFromPlaylist(track_id, title, artist, image) {
   try {
-    const res = await fetch(`https://api.audius.co/v1/tracks/${track_id}/stream`);
-    const data = await res.json();
-    const stream = data.data;
-
+    const stream = `https://cdn.audius.co/v1/stream/${track_id}?app_name=ChintuMusic`;
     localStorage.setItem("audio_url", stream);
     localStorage.setItem("title", title);
     localStorage.setItem("artist", artist);
@@ -39,6 +36,7 @@ async function playFromPlaylist(track_id, title, artist, image) {
   }
 }
 
+// ❌ Remove from playlist
 function removeTrack(index) {
   let playlist = JSON.parse(localStorage.getItem("playlist")) || [];
   playlist.splice(index, 1);
