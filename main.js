@@ -50,9 +50,9 @@ function getTrack(id, title, artist, image) {
     .then(data => {
       console.log("🎧 Track Data:", data);
       const audio = data.url;
-      if (!audio) return alert("❌ No audio URL found");
+      if (!audio) return alert("No audio URL found");
 
-      localStorage.setItem("url", audio);
+      localStorage.setItem("audio_url", audio);
       localStorage.setItem("title", title);
       localStorage.setItem("artist", artist);
       localStorage.setItem("image", image);
@@ -66,7 +66,7 @@ function getTrack(id, title, artist, image) {
 
 // 🎵 Load Player
 function loadPlayer() {
-  const audio = localStorage.getItem("url");
+  const audio = localStorage.getItem("audio_url");
   const title = localStorage.getItem("title");
   const artist = localStorage.getItem("artist");
   const image = localStorage.getItem("image");
