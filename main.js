@@ -3,7 +3,7 @@ async function searchSongs() {
   const query = document.getElementById("searchInput").value.trim();
   const results = document.getElementById("searchResults");
   if (!query) return alert("❌ Please enter a song name");
-  
+
   results.innerHTML = "<p>🔍 Searching...</p>";
 
   try {
@@ -49,8 +49,12 @@ function getTrack(id, title, artist, image) {
     .then(res => res.json())
     .then(data => {
       console.log("🎧 Track Data:", data);
-      const audio = data.url;
-      if (!audio) return alert("No audio URL found");
+
+      const audio = data.url?.find(x => x.quality === "320kbps")?.link
+                 || data.url?.find(x => x.link.includes(".mp4"))?.link
+                 || "";
+
+      if (!audio) return alert("❌ No audio URL found!");
 
       localStorage.setItem("audio_url", audio);
       localStorage.setItem("title", title);
@@ -64,7 +68,7 @@ function getTrack(id, title, artist, image) {
     });
 }
 
-// 🎵 Load Player
+// 🎵 Load Player on player.html
 function loadPlayer() {
   const audio = localStorage.getItem("audio_url");
   const title = localStorage.getItem("title");
@@ -73,8 +77,9 @@ function loadPlayer() {
 
   if (!audio) return alert("❌ No audio found");
 
-  document.getElementById("trackTitle").innerText = title;
-  document.getElementById("trackArtist").innerText = artist;
-  document.getElementById("trackImage").src = image;
-  document.getElementById("audioPlayer").src = audio;
+  document.getElementById("cover").src = image;
+  document.getElementById("title").innerText = title;
+  document.getElementById("artist").innerText = artist;
+  document.getElementById("audio").src = audio;
+  document.getElementById("audio").play();
 }
