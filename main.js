@@ -1,19 +1,21 @@
+// 🔍 Search Songs Function
 async function searchSongs() {
   const query = document.getElementById("searchInput").value.trim();
-  if (!query) return alert("Please enter a song name");
-
   const results = document.getElementById("searchResults");
+  if (!query) return alert("❌ Please enter a song name");
+  
   results.innerHTML = "<p>🔍 Searching...</p>";
 
   try {
     const res = await fetch(`https://backendapi-xgqd.onrender.com/api/search?query=${encodeURIComponent(query)}`);
-    const raw = await res.json();
-    console.log("🔎 API Raw Response:", raw);
+    const data = await res.json();
 
-    const songs = raw?.data?.songs?.results || [];
+    console.log("🔎 API Raw Response:", data);
 
-    if (!songs.length) {
-      results.innerHTML = "<p>❌ No songs found.</p>";
+    const songs = data?.data?.songs?.results;
+
+    if (!songs || !songs.length) {
+      results.innerHTML = "<p>❌ No results found.</p>";
       return;
     }
 
@@ -21,27 +23,17 @@ async function searchSongs() {
 
     for (let song of songs.slice(0, 8)) {
       const id = song.id;
-
-      const detRes = await fetch(`https://backendapi-xgqd.onrender.com/api/song/${id}`);
-      const detData = await detRes.json();
-      const track = detData?.data;
-
-      const audio = track?.downloadUrl?.find(x => x?.quality === "320kbps")?.url || "";
-      const title = track?.title || "Unknown Title";
-      const artist = track?.primaryArtists || "Unknown Artist";
-      const image = track?.image?.[2]?.url || "";
-
-      if (!audio) continue;
-
-      console.log("🎵 Audio URL:", audio);
+      const title = song.title || "Unknown Title";
+      const artist = song.primaryArtists || "Unknown Artist";
+      const img = song.image?.[2]?.url || "";
 
       const div = document.createElement("div");
       div.className = "result-card";
       div.innerHTML = `
-        <img src="${image}" />
+        <img src="${img}" />
         <h3>${title}</h3>
         <p>${artist}</p>
-        <button onclick="playTrack('${audio}', \`${title}\`, \`${artist}\`, '${image}')">▶️ Play</button>
+        <button onclick="getTrack('${id}', \`${title}\`, \`${artist}\`, '${img}')">▶️ Play</button>
       `;
       results.appendChild(div);
     }
@@ -51,15 +43,38 @@ async function searchSongs() {
   }
 }
 
-function playTrack(audio, title, artist, image) {
-  if (!audio || audio === "undefined") {
-    alert("❌ No audio URL found!");
-    return;
-  }
+// ▶️ Play Track via Backend API
+function getTrack(id, title, artist, image) {
+  fetch(`https://backendapi-xgqd.onrender.com/api/song/${id}`)
+    .then(res => res.json())
+    .then(data => {
+      console.log("🎧 Track Data:", data);
+      const audio = data.audio_url;
+      if (!audio) return alert("❌ No audio URL found");
 
-  localStorage.setItem("audio_url", audio);
-  localStorage.setItem("title", title);
-  localStorage.setItem("artist", artist);
-  localStorage.setItem("image", image);
-  window.location.href = "player.html";
+      localStorage.setItem("audio_url", audio);
+      localStorage.setItem("title", title);
+      localStorage.setItem("artist", artist);
+      localStorage.setItem("image", image);
+      window.location.href = "player.html";
+    })
+    .catch(err => {
+      console.error("❌ Track Fetch Error:", err);
+      alert("❌ Could not load track");
+    });
+}
+
+// 🎵 Load Player
+function loadPlayer() {
+  const audio = localStorage.getItem("audio_url");
+  const title = localStorage.getItem("title");
+  const artist = localStorage.getItem("artist");
+  const image = localStorage.getItem("image");
+
+  if (!audio) return alert("❌ No audio found");
+
+  document.getElementById("trackTitle").innerText = title;
+  document.getElementById("trackArtist").innerText = artist;
+  document.getElementById("trackImage").src = image;
+  document.getElementById("audioPlayer").src = audio;
 }
