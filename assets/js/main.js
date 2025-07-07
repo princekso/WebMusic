@@ -8,20 +8,32 @@ async function searchSongs() {
   try {
     const res = await fetch(`https://backendapi-xgqd.onrender.com/api/search?query=${encodeURIComponent(query)}`);
     const data = await res.json();
-    
-    if (!data.data || !Array.isArray(data.data) || data.data.length === 0) {
+
+    console.log("🔎 API Raw Response:", data);
+
+    // ⛳ Try multiple structure possibilities
+    const songs = data.data?.results || data.data || [];
+
+    if (!Array.isArray(songs) || songs.length === 0) {
       results.innerHTML = "<p>❌ No songs found.</p>";
       return;
     }
 
     results.innerHTML = "";
 
-    for (let song of data.data.slice(0, 10)) {
-      const title = song.title || "Unknown";
-      const artist = song.primaryArtists || "Unknown Artist";
-      const image = song.image || "";
-      const audioObj = Array.isArray(song.downloadUrl) ? song.downloadUrl.find(x => x.quality === "320kbps" || "96kbps") : null;
-      const audio = audioObj?.link || "";
+    for (let song of songs.slice(0, 10)) {
+      const title = song.title || song.name || "Unknown";
+      const artist = song.primaryArtists || song.artist || "Unknown Artist";
+      const image = song.image || song.imageUrl || "";
+      let audio = "";
+
+      if (Array.isArray(song.downloadUrl)) {
+        const high = song.downloadUrl.find(x => x.quality === "320kbps");
+        const low = song.downloadUrl.find(x => x.quality === "96kbps");
+        audio = high?.link || low?.link || "";
+      } else if (typeof song.downloadUrl === "string") {
+        audio = song.downloadUrl;
+      }
 
       if (!audio) continue;
 
