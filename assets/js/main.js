@@ -6,12 +6,7 @@ async function searchSongs() {
   results.innerHTML = "<p>🔍 Searching...</p>";
 
   try {
-    const res = await fetch(`https://frozenmusic.vercel.app/api/v1/search?query=${encodeURIComponent(query)}`, {
-      headers: {
-        "X-API-Key": "fzm_2b4ecd31_jz2efhnt"
-      }
-    });
-
+    const res = await fetch(`https://backendapi-xgqd.onrender.com/api/search?query=${encodeURIComponent(query)}`);
     const data = await res.json();
     const songs = data.data;
 
@@ -42,7 +37,7 @@ async function searchSongs() {
       results.appendChild(div);
     }
   } catch (err) {
-    console.error("❌ Error:", err);
+    console.error("❌ Search Error:", err);
     results.innerHTML = "<p>❌ Failed to fetch songs.</p>";
   }
 }
@@ -53,9 +48,21 @@ function playTrack(audio, title, artist, image) {
     return;
   }
 
+  console.log("▶️ Playing:", title);
+
   localStorage.setItem("audio_url", audio);
   localStorage.setItem("title", title);
   localStorage.setItem("artist", artist);
   localStorage.setItem("image", image);
+
   window.location.href = "player.html";
 }
+
+window.onload = () => {
+  const input = document.getElementById("searchInput");
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      searchSongs();
+    }
+  });
+};
