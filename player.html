@@ -47,15 +47,40 @@
       outline: none;
     }
 
-    .back-btn {
-      margin-top: 30px;
-      background: #f72585;
+    .controls, .toggles {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    button {
+      padding: 10px 16px;
       border: none;
-      padding: 10px 20px;
-      color: white;
       border-radius: 20px;
-      font-size: 1em;
+      font-size: 0.9em;
       cursor: pointer;
+      background: #f72585;
+      color: white;
+    }
+
+    .toggle-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85em;
+      color: #ccc;
+    }
+
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .back-btn {
+      margin-top: 20px;
+      background: #6c757d;
     }
   </style>
 </head>
@@ -63,36 +88,109 @@
   <img id="cover" src="" alt="Cover" />
   <h2 id="title">Loading...</h2>
   <p id="artist">Please wait</p>
-  <audio id="audio" controls autoplay>
-    Your browser does not support the audio element.
-  </audio>
+  <audio id="audio" controls autoplay></audio>
+
+  <!-- 🎚 Playback Controls -->
+  <div class="controls">
+    <button onclick="playPrev()">⏮️ Prev</button>
+    <button onclick="playNext()">⏭️ Next</button>
+  </div>
+
+  <!-- 🔘 Toggles -->
+  <div class="toggles">
+    <div class="toggle-group">
+      <input type="checkbox" id="autoplaySwitch" checked />
+      <label for="autoplaySwitch">Autoplay</label>
+    </div>
+    <div class="toggle-group">
+      <input type="checkbox" id="repeatSwitch" />
+      <label for="repeatSwitch">Repeat</label>
+    </div>
+    <div class="toggle-group">
+      <input type="checkbox" id="shuffleSwitch" />
+      <label for="shuffleSwitch">Shuffle</label>
+    </div>
+  </div>
 
   <button class="back-btn" onclick="window.location.href='index.html'">⬅️ Back to Search</button>
 
   <script>
-  window.onload = () => {
-  const audio = localStorage.getItem("audio_url");
-  const title = localStorage.getItem("title");
-  const artist = localStorage.getItem("artist");
-  const image = localStorage.getItem("image");
+    let playlist = JSON.parse(localStorage.getItem("playlist") || "[]");
+    let currentIndex = 0;
 
-  if (!audio) {
-    alert("❌ No song to play");
-    return;
-  }
+    const titleEl = document.getElementById("title");
+    const artistEl = document.getElementById("artist");
+    const coverEl = document.getElementById("cover");
+    const audioEl = document.getElementById("audio");
 
-  // ✅ Match with IDs in your HTML!
-  document.getElementById("cover").src = image;
-  document.getElementById("title").innerText = title;
-  document.getElementById("artist").innerText = artist;
+    const autoplaySwitch = document.getElementById("autoplaySwitch");
+    const repeatSwitch = document.getElementById("repeatSwitch");
+    const shuffleSwitch = document.getElementById("shuffleSwitch");
 
-  const audioPlayer = document.getElementById("audio");
-  audioPlayer.src = audio;
-  audioPlayer.play();
-};
+    function loadAndPlay(index) {
+      if (!playlist.length) {
+        const audio = localStorage.getItem("audio_url");
+        const title = localStorage.getItem("title");
+        const artist = localStorage.getItem("artist");
+        const image = localStorage.getItem("image");
 
-</script>
+        if (!audio) {
+          alert("❌ No song to play");
+          return;
+        }
 
+        titleEl.innerText = title;
+        artistEl.innerText = artist;
+        coverEl.src = image;
+        audioEl.src = audio;
+        audioEl.play();
+        return;
+      }
 
+      if (index < 0 || index >= playlist.length) return;
+      currentIndex = index;
+
+      const song = playlist[index];
+      titleEl.innerText = song.title;
+      artistEl.innerText = song.artist;
+      coverEl.src = song.image;
+      audioEl.src = song.url;
+      audioEl.play();
+    }
+
+    function playNext() {
+      if (shuffleSwitch.checked) {
+        const nextIndex = Math.floor(Math.random() * playlist.length);
+        loadAndPlay(nextIndex);
+      } else if (currentIndex + 1 < playlist.length) {
+        loadAndPlay(currentIndex + 1);
+      }
+    }
+
+    function playPrev() {
+      if (currentIndex > 0) {
+        loadAndPlay(currentIndex - 1);
+      }
+    }
+
+    audioEl.addEventListener("ended", () => {
+      if (repeatSwitch.checked) {
+        loadAndPlay(currentIndex); // repeat same
+      } else if (autoplaySwitch.checked) {
+        playNext(); // next or shuffle
+      }
+    });
+
+    // Load toggle states from storage if needed (optional)
+    window.onload = () => {
+      const autoplay = localStorage.getItem("autoplay_enabled");
+      autoplaySwitch.checked = autoplay !== "false";
+      loadAndPlay(currentIndex);
+    };
+
+    autoplaySwitch.addEventListener("change", () => {
+      localStorage.setItem("autoplay_enabled", autoplaySwitch.checked);
+    });
+  </script>
 </body>
 </html>
