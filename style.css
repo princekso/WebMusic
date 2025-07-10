@@ -1,1 +1,199 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0d0d0d;
+  color: #fff;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.stars {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  animation: fall 10s linear infinite;
+  opacity: 0.6;
+}
+@keyframes fall {
+  from {
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(100vh);
+    opacity: 1;
+  }
+}
+
+header {
+  text-align: center;
+  padding: 30px 15px 10px;
+  font-size: 32px;
+  font-weight: bold;
+  position: relative;
+  z-index: 1;
+}
+header span {
+  background: linear-gradient(to right, #00e0ff, #ff4c6d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.welcome {
+  text-align: center;
+  font-size: 16px;
+  color: #bbb;
+  margin-top: -8px;
+  z-index: 1;
+  position: relative;
+  animation: fadeIn 2s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.search-box {
+  margin: 40px auto 20px;
+  max-width: 600px;
+  display: flex;
+  align-items: center;
+  background: #1a1a1a;
+  padding: 12px 20px;
+  border-radius: 30px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.05);
+  position: relative;
+  z-index: 1;
+}
+.search-box span {
+  margin-right: 10px;
+  font-size: 18px;
+}
+.search-box input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  background: transparent;
+  color: white;
+}
+.search-box input::selection {
+  background: #333;
+  color: #00ffe1;
+}
+.search-box button {
+  background: #00bfa5;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+.feature-card {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  padding: 20px;
+  border-radius: 15px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  transition: 0.3s;
+  box-shadow: 0 0 5px rgba(255,255,255,0.02);
+}
+.feature-card:hover {
+  background: #1c1c1c;
+  transform: scale(1.01);
+}
+.feature-icon {
+  font-size: 26px;
+  color: #00ffe1;
+  text-shadow: 0 0 5px #00ffe1, 0 0 10px #00ffe1;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+@keyframes glow {
+  from { opacity: 0.6; transform: scale(1); }
+  to { opacity: 1; transform: scale(1.1); }
+}
+.feature-text h3 {
+  margin: 0 0 5px;
+  font-size: 18px;
+}
+.feature-text p {
+  margin: 0;
+  font-size: 14px;
+  color: #aaa;
+}
+
+.popular {
+  max-width: 1000px;
+  margin: 40px auto 20px;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+.popular h2 {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+.popular p {
+  color: #aaa;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+.songs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+.song-card {
+  background: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: center;
+  padding: 10px;
+  transition: 0.3s;
+}
+.song-card:hover {
+  transform: scale(1.03);
+  background: #222;
+}
+.song-card img {
+  width: 100%;
+  border-radius: 8px;
+}
+.song-card h4 {
+  font-size: 14px;
+  margin: 8px 0 0;
+}
+.song-card p {
+  font-size: 12px;
+  color: #aaa;
+  margin: 0;
+}
 
