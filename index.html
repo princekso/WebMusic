@@ -18,23 +18,37 @@
       position: relative;
     }
 
-    /* ⭐ STAR ANIMATION */
-    body::before {
-      content: "";
+    /* 🌠 Star Animation */
+    .stars {
+      width: 100%;
+      height: 100%;
+      background: transparent;
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: url("https://raw.githubusercontent.com/kognise/water.css/master/static/star.svg") repeat;
-      background-size: contain;
-      opacity: 0.05;
+      top: 0;
+      left: 0;
       z-index: 0;
-      animation: starScroll 100s linear infinite;
+      overflow: hidden;
     }
 
-    @keyframes starScroll {
-      from { background-position: 0 0; }
-      to { background-position: 1000px 1000px; }
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: fall 10s linear infinite;
+      opacity: 0.6;
+    }
+
+    @keyframes fall {
+      from {
+        transform: translateY(-100vh);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(100vh);
+        opacity: 1;
+      }
     }
 
     header {
@@ -54,11 +68,17 @@
 
     .welcome {
       text-align: center;
-      font-size: 16px;
-      color: #ccc;
-      margin-top: -10px;
+      font-size: 13px;
+      color: #bbb;
+      margin-top: -8px;
       z-index: 1;
       position: relative;
+      animation: fadeIn 2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .search-box {
@@ -127,11 +147,13 @@
     }
 
     .feature-icon {
-      font-size: 28px;
-      animation: glowIcon 2s ease-in-out infinite alternate;
+      font-size: 26px;
+      color: #00ffe1;
+      text-shadow: 0 0 5px #00ffe1, 0 0 10px #00ffe1;
+      animation: glow 2s ease-in-out infinite alternate;
     }
 
-    @keyframes glowIcon {
+    @keyframes glow {
       from { opacity: 0.6; transform: scale(1); }
       to { opacity: 1; transform: scale(1.1); }
     }
@@ -205,11 +227,25 @@
 </head>
 <body>
 
+  <div class="stars">
+    <!-- 50 random stars -->
+    <script>
+      for (let i = 0; i < 50; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        s.style.left = Math.random() * 100 + 'vw';
+        s.style.top = Math.random() * 100 + 'vh';
+        s.style.animationDuration = (5 + Math.random() * 5) + 's';
+        document.body.querySelector('.stars').appendChild(s);
+      }
+    </script>
+  </div>
+
   <header>
-    <span>Chintu Music</span>
+    <span>Frozen Music</span>
   </header>
   <div class="welcome">
-    Welcome Chintu! Stream your favorite music anytime, anywhere. High-quality audio at your fingertips.
+    Welcome Chintu! Stream your favorite music anytime, anywhere.
   </div>
 
   <div class="search-box">
@@ -223,28 +259,28 @@
       <div class="feature-icon">🎵</div>
       <div class="feature-text">
         <h3>High Quality Audio</h3>
-        <p>Experience crystal clear sound with our high-definition audio streaming</p>
+        <p>Crystal clear sound with 320kbps streaming</p>
       </div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🎧</div>
       <div class="feature-text">
         <h3>Personalized Experience</h3>
-        <p>Discover new music based on your listening habits and preferences</p>
+        <p>Smart recommendations based on your taste</p>
       </div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">📥</div>
       <div class="feature-text">
         <h3>Offline Listening</h3>
-        <p>Download your favorite tracks and listen even without internet</p>
+        <p>Download and enjoy music without internet</p>
       </div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">💻</div>
       <div class="feature-text">
         <h3>Developer API</h3>
-        <p>Access our music database through our REST API</p>
+        <p>Access full catalog with our RESTful API</p>
       </div>
     </div>
   </div>
