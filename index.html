@@ -5,19 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chintu Music Player</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
       background: #0d0d0d;
-      color: #ffffff;
+      color: #fff;
       overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ⭐ STAR ANIMATION */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url("https://raw.githubusercontent.com/kognise/water.css/master/static/star.svg") repeat;
+      background-size: contain;
+      opacity: 0.05;
+      z-index: 0;
+      animation: starScroll 100s linear infinite;
+    }
+
+    @keyframes starScroll {
+      from { background-position: 0 0; }
+      to { background-position: 1000px 1000px; }
     }
 
     header {
       text-align: center;
-      padding: 25px 10px 10px;
+      padding: 30px 15px 10px;
       font-size: 32px;
       font-weight: bold;
+      position: relative;
+      z-index: 1;
     }
 
     header span {
@@ -31,6 +57,8 @@
       font-size: 16px;
       color: #ccc;
       margin-top: -10px;
+      z-index: 1;
+      position: relative;
     }
 
     .search-box {
@@ -42,6 +70,13 @@
       padding: 12px 20px;
       border-radius: 30px;
       box-shadow: 0 0 10px rgba(255,255,255,0.05);
+      position: relative;
+      z-index: 1;
+    }
+
+    .search-box span {
+      margin-right: 10px;
+      font-size: 18px;
     }
 
     .search-box input {
@@ -64,12 +99,14 @@
     }
 
     .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      display: flex;
+      flex-direction: column;
       gap: 20px;
-      max-width: 1000px;
+      max-width: 600px;
       margin: 30px auto;
       padding: 0 20px;
+      position: relative;
+      z-index: 1;
     }
 
     .feature-card {
@@ -77,33 +114,45 @@
       border: 1px solid #2a2a2a;
       padding: 20px;
       border-radius: 15px;
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
       transition: 0.3s;
       box-shadow: 0 0 5px rgba(255,255,255,0.02);
     }
 
     .feature-card:hover {
       background: #1c1c1c;
-      transform: scale(1.02);
-    }
-
-    .feature-card h3 {
-      margin: 10px 0 5px;
-      font-size: 18px;
-    }
-
-    .feature-card p {
-      font-size: 14px;
-      color: #aaa;
+      transform: scale(1.01);
     }
 
     .feature-icon {
       font-size: 28px;
+      animation: glowIcon 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowIcon {
+      from { opacity: 0.6; transform: scale(1); }
+      to { opacity: 1; transform: scale(1.1); }
+    }
+
+    .feature-text h3 {
+      margin: 0 0 5px;
+      font-size: 18px;
+    }
+
+    .feature-text p {
+      margin: 0;
+      font-size: 14px;
+      color: #aaa;
     }
 
     .popular {
       max-width: 1000px;
       margin: 40px auto 20px;
       padding: 0 20px;
+      position: relative;
+      z-index: 1;
     }
 
     .popular h2 {
@@ -164,7 +213,7 @@
   </div>
 
   <div class="search-box">
-    <span style="margin-right: 10px;">🔍</span>
+    <span>🔍</span>
     <input type="text" id="searchInput" placeholder="Search for songs, artists, albums...">
     <button onclick="searchSongs()">Search</button>
   </div>
@@ -172,31 +221,39 @@
   <div class="features">
     <div class="feature-card">
       <div class="feature-icon">🎵</div>
-      <h3>High Quality Audio</h3>
-      <p>Experience crystal clear sound with our high-definition audio streaming</p>
+      <div class="feature-text">
+        <h3>High Quality Audio</h3>
+        <p>Experience crystal clear sound with our high-definition audio streaming</p>
+      </div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🎧</div>
-      <h3>Personalized Experience</h3>
-      <p>Discover new music based on your listening habits and preferences</p>
+      <div class="feature-text">
+        <h3>Personalized Experience</h3>
+        <p>Discover new music based on your listening habits and preferences</p>
+      </div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">📥</div>
-      <h3>Offline Listening</h3>
-      <p>Download your favorite tracks and listen even without internet</p>
+      <div class="feature-text">
+        <h3>Offline Listening</h3>
+        <p>Download your favorite tracks and listen even without internet</p>
+      </div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">💻</div>
-      <h3>Developer API</h3>
-      <p>Access our music database through our REST API</p>
+      <div class="feature-text">
+        <h3>Developer API</h3>
+        <p>Access our music database through our REST API</p>
+      </div>
     </div>
   </div>
 
   <div class="popular">
     <h2>🔥 Most Popular Songs</h2>
-    <p>The most played tracks on Chintu Music</p>
+    <p>The most played tracks on Frozen Music</p>
     <div class="songs-grid" id="searchResults">
-      <!-- Song cards injected by JS -->
+      <!-- Injected via main.js -->
     </div>
   </div>
 
