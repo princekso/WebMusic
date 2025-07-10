@@ -2,140 +2,205 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chintu Music Player</title>
   <style>
     body {
       margin: 0;
-      font-family: "Segoe UI", sans-serif;
-      background: #0c0c0c;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      background: #0d0d0d;
+      color: #ffffff;
+      overflow-x: hidden;
     }
 
     header {
-      width: 100%;
-      padding: 25px 0;
-      background: #1a1a1a;
       text-align: center;
-      font-size: 28px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-      animation: fadeDown 0.7s ease;
+      padding: 25px 10px 10px;
+      font-size: 32px;
+      font-weight: bold;
     }
 
-    @keyframes fadeDown {
-      from { transform: translateY(-20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    header span {
+      background: linear-gradient(to right, #00e0ff, #ff4c6d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    #search-container {
+    .welcome {
+      text-align: center;
+      font-size: 16px;
+      color: #ccc;
+      margin-top: -10px;
+    }
+
+    .search-box {
       margin: 40px auto 20px;
-      width: 90%;
       max-width: 600px;
       display: flex;
-      justify-content: center;
-      animation: fadeIn 1s ease;
+      align-items: center;
+      background: #1a1a1a;
+      padding: 12px 20px;
+      border-radius: 30px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.05);
     }
 
-    #searchInput {
-      width: 100%;
-      padding: 14px 20px;
-      font-size: 18px;
-      border-radius: 30px;
+    .search-box input {
+      flex: 1;
       border: none;
       outline: none;
-      background-color: #1e1e1e;
+      font-size: 16px;
+      background: transparent;
       color: white;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-      transition: 0.3s;
     }
 
-    #searchInput:focus {
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+    .search-box button {
+      background: #00bfa5;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 500;
     }
 
-    #searchResults {
-      width: 90%;
-      max-width: 900px;
+    .features {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 20px;
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .feature-card {
+      background: #141414;
+      border: 1px solid #2a2a2a;
       padding: 20px;
-    }
-
-    .result-card {
-      background: #1c1c1c;
       border-radius: 15px;
-      padding: 15px;
-      text-align: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-      transition: transform 0.3s ease, background 0.3s;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeInUp 0.6s forwards;
+      transition: 0.3s;
+      box-shadow: 0 0 5px rgba(255,255,255,0.02);
     }
 
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .feature-card:hover {
+      background: #1c1c1c;
+      transform: scale(1.02);
     }
 
-    .result-card:hover {
-      transform: scale(1.03);
-      background: #252525;
-    }
-
-    .result-card img {
-      width: 100%;
-      border-radius: 10px;
-    }
-
-    .result-card h3 {
+    .feature-card h3 {
       margin: 10px 0 5px;
       font-size: 18px;
     }
 
-    .result-card p {
-      margin: 0;
+    .feature-card p {
       font-size: 14px;
       color: #aaa;
     }
 
-    .result-card button {
-      margin-top: 10px;
-      padding: 10px 15px;
-      border: none;
-      background: #ff3c68;
-      color: #fff;
-      border-radius: 20px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: background 0.2s ease;
+    .feature-icon {
+      font-size: 28px;
     }
 
-    .result-card button:hover {
-      background: #ff2250;
+    .popular {
+      max-width: 1000px;
+      margin: 40px auto 20px;
+      padding: 0 20px;
+    }
+
+    .popular h2 {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    .popular p {
+      color: #aaa;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    .songs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+    }
+
+    .song-card {
+      background: #1a1a1a;
+      border-radius: 12px;
+      overflow: hidden;
+      text-align: center;
+      padding: 10px;
+      transition: 0.3s;
+    }
+
+    .song-card:hover {
+      transform: scale(1.03);
+      background: #222;
+    }
+
+    .song-card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .song-card h4 {
+      font-size: 14px;
+      margin: 8px 0 0;
+    }
+
+    .song-card p {
+      font-size: 12px;
+      color: #aaa;
+      margin: 0;
     }
   </style>
 </head>
 <body>
-  <header>🎵 Chintu Music Player</header>
 
-  <div id="search-container">
-    <input type="text" id="searchInput" placeholder="Search for songs..." />
+  <header>
+    <span>Frozen Music</span>
+  </header>
+  <div class="welcome">
+    Welcome Chintu! Stream your favorite music anytime, anywhere. High-quality audio at your fingertips.
   </div>
 
-  <div id="searchResults">
-    <!-- Result cards will be rendered here -->
+  <div class="search-box">
+    <span style="margin-right: 10px;">🔍</span>
+    <input type="text" id="searchInput" placeholder="Search for songs, artists, albums...">
+    <button onclick="searchSongs()">Search</button>
+  </div>
+
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon">🎵</div>
+      <h3>High Quality Audio</h3>
+      <p>Experience crystal clear sound with our high-definition audio streaming</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎧</div>
+      <h3>Personalized Experience</h3>
+      <p>Discover new music based on your listening habits and preferences</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📥</div>
+      <h3>Offline Listening</h3>
+      <p>Download your favorite tracks and listen even without internet</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💻</div>
+      <h3>Developer API</h3>
+      <p>Access our music database through our REST API</p>
+    </div>
+  </div>
+
+  <div class="popular">
+    <h2>🔥 Most Popular Songs</h2>
+    <p>The most played tracks on Frozen Music</p>
+    <div class="songs-grid" id="searchResults">
+      <!-- Song cards injected by JS -->
+    </div>
   </div>
 
   <script src="main.js"></script>
+
 </body>
 </html>
