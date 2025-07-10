@@ -2,63 +2,94 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chintu Music Player 🎵</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chintu Music Player</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Nunito', sans-serif;
-      background-color: #0f0f0f;
-      color: white;
-    }
-
-    .header {
-      text-align: center;
-      padding: 30px 20px 20px;
-    }
-
-    .header h1 {
-      font-size: 2.2em;
-      margin: 0;
-      color: #f72585;
-    }
-
-    .search-box {
-      text-align: center;
-      margin: 20px;
-    }
-
-    .search-box input {
-      width: 80%;
-      max-width: 500px;
-      padding: 12px 18px;
-      border-radius: 25px;
-      border: none;
-      font-size: 1.1em;
-      outline: none;
-    }
-
-    .results {
+      font-family: "Segoe UI", sans-serif;
+      background: #0c0c0c;
+      color: #fff;
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 100%;
+      padding: 25px 0;
+      background: #1a1a1a;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      animation: fadeDown 0.7s ease;
+    }
+
+    @keyframes fadeDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    #search-container {
+      margin: 40px auto 20px;
+      width: 90%;
+      max-width: 600px;
+      display: flex;
       justify-content: center;
-      gap: 16px;
-      margin: 30px;
+      animation: fadeIn 1s ease;
+    }
+
+    #searchInput {
+      width: 100%;
+      padding: 14px 20px;
+      font-size: 18px;
+      border-radius: 30px;
+      border: none;
+      outline: none;
+      background-color: #1e1e1e;
+      color: white;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+      transition: 0.3s;
+    }
+
+    #searchInput:focus {
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+    }
+
+    #searchResults {
+      width: 90%;
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
     }
 
     .result-card {
-      background-color: #1c1c1c;
-      border-radius: 12px;
-      width: 180px;
-      padding: 12px;
+      background: #1c1c1c;
+      border-radius: 15px;
+      padding: 15px;
       text-align: center;
-      transition: transform 0.2s ease;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+      transition: transform 0.3s ease, background 0.3s;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .result-card:hover {
-      transform: scale(1.05);
-      background-color: #2a2a2a;
+      transform: scale(1.03);
+      background: #252525;
     }
 
     .result-card img {
@@ -67,48 +98,42 @@
     }
 
     .result-card h3 {
-      font-size: 1em;
       margin: 10px 0 5px;
+      font-size: 18px;
     }
 
     .result-card p {
-      font-size: 0.9em;
-      color: #ccc;
-      margin: 0 0 10px;
+      margin: 0;
+      font-size: 14px;
+      color: #aaa;
     }
 
     .result-card button {
-      background-color: #f72585;
-      color: white;
-      padding: 8px 16px;
+      margin-top: 10px;
+      padding: 10px 15px;
       border: none;
+      background: #ff3c68;
+      color: #fff;
       border-radius: 20px;
+      font-size: 14px;
       cursor: pointer;
+      transition: background 0.2s ease;
     }
 
-    .footer {
-      text-align: center;
-      font-size: 0.9em;
-      color: #777;
-      padding: 20px;
-      margin-top: 50px;
+    .result-card button:hover {
+      background: #ff2250;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>🎶 Chintu Music Player</h1>
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Search your favorite song..." onkeydown="if(event.key === 'Enter') searchSongs()" />
-    </div>
+  <header>🎵 Chintu Music Player</header>
+
+  <div id="search-container">
+    <input type="text" id="searchInput" placeholder="Search for songs..." />
   </div>
 
-  <div id="searchResults" class="results">
-    <!-- Songs appear here -->
-  </div>
-
-  <div class="footer">
-    © 2025 Chintu Music | Powered by JioSaavn
+  <div id="searchResults">
+    <!-- Result cards will be rendered here -->
   </div>
 
   <script src="main.js"></script>
